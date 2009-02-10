@@ -60,7 +60,7 @@ var UrlManager = Class.create({
 	init: function() {
 	
 			
-		Trace.writeMessage('UrlManager::init');
+		FwkTrace.writeMessage('MC_007'); //'UrlManager::init');
 		var confManager = ConfManager.getInstance();
 		
 		// FROM http://code.google.com/p/reallysimplehistory/wiki/UsageInstructions

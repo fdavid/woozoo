@@ -197,20 +197,29 @@ var Controller = Class.create({
 	
 	_doUnloadModule: function (id, willReload) {
 		var mvcProp = this._getModule(id);
+		var itemUtil_getAttribute_function = ItemUtil.getAttribute;
 		
 		mvcProp.set('loading', false);
 		
 		FwkTrace.writeMessage('M5_016', id);//"Controller::unLoadModule : unloading module "+id);
 		
 		// delete the contents of the view
-		var view = $(mvcProp.get('addViewInId'));
-		if (view != '' && view != null && view != undefined) {
-			$(mvcProp.get('addViewInId')).update();
+		var addViewInId = mvcProp.get('addViewInId');
+		if (elementExists(addViewInId)) {
+			$(addViewInId).update();
 		}
 		
-		var confXml = mvcProp.get('confXml');
+		
+		var confXml = window[mvcProp.get('id')+'Properties'];
+		if (!confXml) {
+			var listeners = $A(mvcProp.get('confXml').getElementsByTagName('bindAsListener'));
+		} else {
+			var listeners = confXml.bindAsListener;
+		}
+		
+		//var confXml = mvcProp.get('confXml');
 		var type =  mvcProp.get('type');
-		var listeners = $A(confXml.getElementsByTagName('bindAsListener'));
+		
 		var listenersLen = listeners.length;
 		
 		try {
@@ -232,9 +241,9 @@ var Controller = Class.create({
 				// remove dynamically added handler
 				for (var j = 0; j < listenersLen; j++) {
 					var bind = listeners[j];
-					var id = ModuleManager.getInstance().getBindId(bind.getAttribute('id'), i, type);
-					if ($(id)) {
-						var event = 	bind.getAttribute('event');
+					var id = ModuleManager.getInstance().getBindId(itemUtil_getAttribute_function(bind, 'id'), i, type);
+					if (elementExists(id)) {
+						var event = 	itemUtil_getAttribute_function(bind, 'event');
 						Event.stopObserving(id, event);
 					}
 				}
@@ -259,8 +268,8 @@ var Controller = Class.create({
 			if (willReload == false) {
 			
 				// delete the methos of the class
-				mvcProp.get('modelHelperClass')['removeMethods'](); // see extends.js in libs/prototype/
-				mvcProp.get('controllerHelperClass')['removeMethods'](); // see extends.js in libs/prototype/
+				mvcProp.get('modelHelperClass').removeMethods(); // see extends.js in libs/prototype/
+				mvcProp.get('controllerHelperClass').removeMethods(); // see extends.js in libs/prototype/
 			
 			}
 		} catch (error) {
@@ -271,16 +280,19 @@ var Controller = Class.create({
 			// if the loaded file was the compressed one
 			if (mvcProp.get('compressed')) {
 				// remove the script
-				if ($('js_'+mvcProp.get('modelHelper'))) {
-					$('js_'+mvcProp.get('modelHelper')).remove();
+				var modelHelperJSName = 'js_'+mvcProp.get('modelHelper');
+				if (elementExists(modelHelperJSName)) {
+					$(modelHelperJSName).remove();
 				}
 			} else {
 				// remove js files
-				if ($('js_'+mvcProp.get('modelHelper'))) {
-					$('js_'+mvcProp.get('modelHelper')).remove();
+				var modelHelperJSName = 'js_'+mvcProp.get('modelHelper');
+				if (elementExists(modelHelperJSName)) {
+					$(modelHelperJSName).remove();
 				}	
-				if ($('js_'+mvcProp.get('controllerHelper'))) {
-					$('js_'+mvcProp.get('controllerHelper')).remove();
+				var controllerHelperJSName = 'js_'+mvcProp.get('controllerHelper');
+				if (elementExists(controllerHelperJSName)) {
+					$(controllerHelperJSName).remove();
 				}	
 			}
 		}
@@ -340,7 +352,7 @@ var Controller = Class.create({
 		}
 		
 		if (this._debugLaunchMethod) {
-			Trace.writeMessage('Controller::launchModelMethod : call method '+modelMethod+' on model from '+controllerName+' with multitonId '+multitonId);
+			FwkTrace.writeMessage('M5_034', modelMethod, controllerName, multitonId); //'Controller::launchModelMethod : call method '+modelMethod+' on model from '+controllerName+' with multitonId '+multitonId);
 		}
 		
 		try {
@@ -353,7 +365,7 @@ var Controller = Class.create({
 		}
 		
 		if (this._debugLaunchMethod) {
-			FwkTrace.writeMessage('M5_006', modelMethod+' with '+args.length+' args');//'Controller::lauchModelMethod : ready to proceed : '+call);
+			FwkTrace.writeMessage('M5_006', modelMethod, args.length);//'Controller::lauchModelMethod : ready to proceed : '+call);
 		}
 		
 		return value;
@@ -390,22 +402,22 @@ var Controller = Class.create({
 			// IE7 makes my evening long :(
 			returnValue = Function.prototype.apply.call(method, element, args);
 		} catch (error) {
-			FwkTrace.writeError('M5_013', elementId+' '+methodName+' with '+ args.length +' args '+ErrorUtil.get(error));//'Controller::applyMethodToElement : '+error)
+			FwkTrace.writeError('M5_013', elementId, methodName, args.length, ErrorUtil.get(error));//'Controller::applyMethodToElement : '+error)
 		}
 		return returnValue;
 	},
 	
 	refreshModule: function(moduleId) {
 		var mvcProp = this._getModule(moduleId);
-		Trace.write('Controller::refreshModule : refreshing '+moduleId+'');
+		FwkTrace.writeMessage('M5_035', moduleId);
 		
 		if (!mvcProp) {
-			Trace.writeError('Controller::refreshModule : fail to find module '+moduleId);
+			FwkTrace.writeError('M5_036', moduleId); //'Controller::refreshModule : fail to find module '+moduleId);
 			return false;
 		}
 		// if module is not loaded
 		if (!mvcProp.get('loaded')) {
-			Trace.writeError('Controller::refreshModule : the module '+moduleId+' is not loaded : launch loadModule');
+			FwkTrace.writeError('M5_037', moduleId);//'Controller::refreshModule : the module '+moduleId+' is not loaded : launch loadModule');
 			this.loadModule(moduleId);
 		} else {
 			ModuleManager.getInstance().updateModule(mvcProp);
@@ -416,15 +428,15 @@ var Controller = Class.create({
 	getCurrentMultitonNumber: function(moduleId) {
 		var mvcProp = this._getModule(moduleId);
 		if (!mvcProp) {
-			Trace.writeError('Controller::getNextMultitonId : fail to find module '+moduleId);
+			FwkTrace.writeError('M5_038', moduleId); //'Controller::getNextMultitonId : fail to find module '+moduleId);
 			return false;
 		}
 		if (!mvcProp.get('loaded')) {
-			Trace.writeError('Controller::getNextMultitonId : the module '+moduleId+' is not loaded');
+			FwkTrace.writeError('M5_039', moduleId); //'Controller::getNextMultitonId : the module '+moduleId+' is not loaded');
 			return false;
 		}	
 		if (mvcProp.get('type') != ModuleManager.MODULE_MULTIPLE) {
-			Trace.writeError('Controller::getNextMultitonId : the module '+moduleId+' has not the type '+ModuleManager.MODULE_MULTIPLE);
+			FwkTrace.writeError('M5_040', moduleId, ModuleManager.MODULE_MULTIPLE);//'Controller::getNextMultitonId : the module '+moduleId+' has not the type '+ModuleManager.MODULE_MULTIPLE);
 			return false;
 		}
 		return mvcProp.get('stopMultitonNum');
@@ -459,11 +471,11 @@ var Controller = Class.create({
 		var instance = this._findLinkedController(modelName, multitonId);
 
 		if (!instance) {
-			FwkTrace.writeError('M5_009', modelName+' with multiton id '+multitonId);//Controller::_launchControllerMethod : no controller found corresponding to model %s	
+			FwkTrace.writeError('M5_009', modelName, multitonId);//Controller::_launchControllerMethod : no controller found corresponding to model %s	
 			return false;
 		}
 		if (this._debugLaunchMethod) {
-			Trace.writeMessage('Controller::_launchControllerMethod : try to proceed : '+controllerMethod+' on '+modelName+' with multiton id '+multitonId);//Controller::_launchControllerMethod : ready to proceed : %s
+			FwkTrace.writeMessage('M5_041', controllerMethod, modelName, multitonId);//'Controller::_launchControllerMethod : try to proceed : '+controllerMethod+' on '+modelName+' with multiton id '+multitonId);//Controller::_launchControllerMethod : ready to proceed : %s
 		}
 		try {
 			// saving this line : "instance[controllerMethod].apply(instance, args);"
@@ -608,7 +620,7 @@ var Controller = Class.create({
 	},
 	
 	_loadDynFile: function() {
-		trace('Initializer::_loadDynFileSucceedHandler : loading dyn');
+		FwkTrace.writeMessage('M5_042');//'Initializer::_loadDynFileSucceedHandler : loading dyn
 		var conf = ConfManager.getInstance();
 		
 		var url = [];
@@ -631,8 +643,7 @@ var Controller = Class.create({
 	_loadDynFileSucceedHandler: function() {
 		document.stopObserving(ScriptLoader.SUCCEED);
 		document.stopObserving(ScriptLoader.FAILED);
-		trace('Initializer::_loadDynFileSucceedHandler : loading dyn succeed');
-		
+		FwkTrace.writeMessage('M5_043');//Controller::_loadDynFileSucceedHandler : loading dyn succeed
 		this._parseMvcFile();
 		this._useMvcFile();
 	}, 
@@ -702,7 +713,7 @@ var Controller = Class.create({
 					this._mvcPropertiesToExecuteAtInitLen++;
 				}
 			} else {
-				Trace.writeWarning("Controller::_parseMvcFile : we didn't find the requireId "+requireId+", so we do not load the module "+id);
+				FwkTrace.writeWarning('M5_044', requireId, id); //"Controller::_parseMvcFile : we didn't find the requireId "+requireId+", so we do not load the module "+id);
 			}	
 		}
 
@@ -769,7 +780,7 @@ var Controller = Class.create({
 			}
 		
 		} catch (error) {
-			Trace.writeError('Controller::_initHelpers : 1 '+ErrorUtil.get(error));//'Controller::_initHelpers : unable to lauch init method on controller helper');
+			FwkTrace.writeError('M5_045', ErrorUtil.get(error)); // Controller::_initHelpers : Unable to set properties on model or controller helper instances : %s
 		}
 		
 		try {	
@@ -778,7 +789,7 @@ var Controller = Class.create({
 				instancesModel[i].init(initModelObj);
 			}
 		} catch (error) {	
-			Trace.writeError('Controller::_initHelpers : 2 '+ErrorUtil.get(error));//'Controller::_initHelpers : unable to lauch init method on controller helper');
+			FwkTrace.writeError('M5_046', ErrorUtil.get(error));//Controller::_initHelpers : Unable to init model or controller helper : %s
 		}
 		
 		try {	
@@ -792,14 +803,12 @@ var Controller = Class.create({
 				for (var j = 0; j < requiredApplicationDataLen; j++) {
 					requiredApplicationDataItem = requiredApplicationData[j];
 					if (confManager.getApplicationData(requiredApplicationDataItem) == undefined) {
-						Trace.writeError('Controller::_initHelpers : '+moduleProp.get('id')+' require the application data ['+requiredApplicationDataItem+'] (please complete your main conf file or the second parameter of the initializer)');				
+						FwkTrace.writeError('M5_047', moduleProp.get('id'), requiredApplicationDataItem);//'Controller::_initHelpers : '+moduleProp.get('id')+' require the application data ['+requiredApplicationDataItem+'] (please complete your main conf file or the second parameter of the initializer)');				
 					}
 				}
 			}
 		} catch (error) {
-			Trace.writeError('Controller::_initHelpers : 2 '+ErrorUtil.get(error));
-			// Don't forget to change the Comment here 
-			//FwkTrace.writeError('M5_018', ErrorUtil.get(error));//'Controller::_initHelpers : unable to lauch init method on controller helper');
+			FwkTrace.writeError('M5_048', ErrorUtil.get(error));//'Controller::_initHelpers : problem while checking required key : '+ErrorUtil.get(error));
 		}
 		// the start become the stop for later loading
 		moduleProp.set('startMultitonNum', stopMultitonNum+1);

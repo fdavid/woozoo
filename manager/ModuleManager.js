@@ -625,7 +625,7 @@ var ModuleManager = Class.create({
 			var name = itemUtil_getAttribute_function(list[0], 'id');
 			
 			if (!name.include('[]')) {
-				Trace.writeWarning('ModuleManager::_countModule : '+name+' do not contains the string [], stop execution');				
+				FwkTrace.writeWarning('M3_005', name);//'ModuleManager::_countModule : '+name+' do not contains the string [], stop execution');				
 				return 0;
 			}
 			while(elementExists(name.replace('[]', start))) {

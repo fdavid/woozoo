@@ -63,12 +63,12 @@ var PluginManager = Class.create({
 	 *
 	 * */
 	declarePlugin: function(id, src, className, version, w3cStandard, loaded) {
-		Trace.writeMessage('PluginManager::declarePlugin : declare plugin '+id+' with src '+src);
+		FwkTrace.writeMessage('MA_005', id, src);//'PluginManager::declarePlugin : declare plugin '+id+' with src '+src);
 		
-		if (!id) {
-			Trace.writeError('PluginManager::declarePlugin : id is not defined ['+id+']');
-			return false;
-		}
+		//if (!id) {
+		//	Trace.writeError('PluginManager::declarePlugin : id is not defined ['+id+']');
+		//	return false;
+		//}
 		
 		if (this._plugins[id]) {
 			FwkTrace.writeWarning('MA_001', id);//'PluginManager::declarePlugin : plugin with id '+id+' already exist : override it');

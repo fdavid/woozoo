@@ -9,7 +9,6 @@ $toFile = "compress/WZFwk.js";
 $jsFileList = array();
 
 // utils first
-
 $jsFileList[$i++]['name'] = "trace/Trace.js";
 $jsFileList[$i++]['name'] = "utils/ErrorUtil.js";
 $jsFileList[$i++]['name'] = "utils/BooleanUtil.js";
@@ -27,9 +26,7 @@ $jsFileList[$i++]['name'] = "manager/ConfManager.js";
 $jsFileList[$i++]['name'] = "manager/LangManager.js";
 $jsFileList[$i++]['name'] = "manager/HelperLoaderManager.js";
 $jsFileList[$i++]['name'] = "manager/UrlManager.js";
-
 $jsFileList[$i++]['name'] = "controller/Controller.js";
-
 $jsFileList[$i++]['name'] = "initializer/Initializer.js";
 
 $jsFileList[$i++]['name'] = "model/Model.js";
@@ -43,7 +40,6 @@ $jsFileList[$i++]['name'] = "trace/FwkTrace.js";
 $jsFileList[$i++]['name'] = "object/ScriptLoader.js";
 
 $jsFileList[$i++]['name'] = "manager/PluginManager.js";
-
 header('Content-type: text/plain');
 
 $removeFwkTrace = false;
@@ -117,18 +113,25 @@ for ($i = 0; $i < sizeof($jsFileList); $i++) {
 		}
 		
 		if (count($methods) > 0) {
+			$methods = array_unique($methods);
 			usort($methods, "Ascii_Sort"); 
 			for ($j = 0; $j < count($methods); $j++) {
-				$res = str_replace($methods[$j], 'W'.$j."", $res);
+				$res = str_replace($methods[$j], 'W'.$i."_".$j."", $res);
 			}
 		}
 		if (count($properties) > 0) {
+			$properties = array_unique($properties);
 			usort($properties, "Ascii_Sort"); 
 			for ($j = 0; $j < count($properties); $j++) {
-				$res = str_replace(array("this.".$properties[$j], "This.".$properties[$j]), array("this.Z".$j, "This.Z".$j), $res);
+				$res = str_replace(array("this.".$properties[$j], "This.".$properties[$j]), array("this.Z".$i."_".$j, "This.Z".$i."_".$j), $res);
 			}
 		}
+		//print_r($methods);
+		//print_r($properties);
+		//die();
 		$result .= $res."\n\n";
+	} else {
+		echo "Unable to open : ".$mainFolder.$jsFileList[$i]['name'];
 	}
 }
 

@@ -24,7 +24,7 @@ M3_001 = ModuleManager::_initRest : unable to eval controller %s and/or model %s
 M3_002 = ModuleManager::_initRest : unknow value for type (should be either %s or %s)
 M3_003 = ModuleManager::_initRest : do not execute bindings [value = '%s']
 M3_004 = ModuleManager::_getBindId : unknow type (should be either %s or %s)
-M3_005 =
+M3_005 = ModuleManager::_countModule : %s do not contains the string [], stop execution
 M3_006 =
 M3_007 =
 M3_011 = ModuleManager::_initMvc()
@@ -53,14 +53,14 @@ M5_002 = Controller::loadModule : LoadingModule : %s
 M5_003 = Controller::loadModule : Module already loaded : %s
 M5_004 = Controller::lauchModelMethod : this method has at least 1 args, not %s
 M5_005 = Controller::lauchModelMethod : no model found corresponding to controller %s
-M5_006 = Controller::lauchModelMethod : ready to proceed : %s
+M5_006 = Controller::lauchModelMethod : ready to proceed : %s with %s args
 M5_007 = Controller::lauchModelMethod : failed call %s (method doesnt exist OR bad code in the method)
 M5_008 = Controller::_loadMvcFileFailHandler : mvc file [%s] was not loaded : %s
-M5_009 = Controller::_launchControllerMethod : no controller found corresponding to model %s
+M5_009 = Controller::_launchControllerMethod : no controller found corresponding to model %s with multiton id %s
 M5_010 = Controller::_launchControllerMethod : ready to proceed : %s
 M5_011 = Controller::_launchControllerMethod : failed call %s
 M5_012 = Controller::_launchControllerMethod : this method has at least 1 args, not %s
-M5_013 = Controller::applyMethodToElement : %s
+M5_013 = Controller::applyMethodToElement : %s %s with %s args : %s
 M5_014 = Controller::applyMethodToElement : this method has at least 2 parameters
 M5_015 = Controller::applyMethodToElement : unknow element %s
 M5_016 = Controller::unLoadModule : unloading module %s
@@ -81,10 +81,21 @@ M5_030 = Controller::unLoadModule : The module %s is loading : will try again in
 M5_031 = Controller::unLoadModule : The module %s is not loaded anymore after %s try
 M5_032 = Controller::unLoadModule : The module %s is loading : %s try
 M5_033 = Controller::unLoadModule : The module %s is still loading after so much time, stop trying
-M5_034 = 
-M5_035 = 
-M5_036 = 
-M5_037 = 
+M5_034 = Controller::launchModelMethod : call method %s on model from %s with multitonId %s
+M5_035 = Controller::refreshModule : refreshing %s
+M5_036 = Controller::refreshModule : fail to find module %s
+M5_037 = Controller::refreshModule : the module %s is not loaded : launch loadModule
+M5_038 = Controller::getNextMultitonId : fail to find module %s
+M5_039 = Controller::getNextMultitonId : the module %s is not loaded
+M5_040 = Controller::getNextMultitonId : the module %s has not the type %s
+M5_041 = Controller::_launchControllerMethod : try to proceed : %s on %s with multiton id %s
+M5_042 = Controller::_loadDynFile : loading dyn
+M5_043 = Controller::_loadDynFileSucceedHandler : loading dyn succeed
+M5_044 = Controller::_parseMvcFile : we didn't find the requireId %s, so we do not load the module %s
+M5_045 = Controller::_initHelpers : Unable to set properties on model or controller helper instances : %s
+M5_046 = Controller::_initHelpers : Unable to init model or controller helper : %s
+M5_047 = Controller::_initHelpers : %s require the application data [%s] (please complete your main conf file or the second parameter of the initializer)
+M5_048 = Controller::_initHelpers : problem while checking required key : %s
 
 
 // ScriptLoader
@@ -118,6 +129,12 @@ MA_001 = PluginManager::declarePlugin : plugin with id %s already exist : overri
 MA_002 = PluginManager::apply : Unknow plugin with id %s
 MA_003 = PluginManager::_loadHandler : loading file %s succeed
 MA_004 = PluginManager::_failHandler : loading file %s failed
+MA_005 = PluginManager::declarePlugin : declare plugin %s with src %s
+MA_006 =
+MA_007 =
+MA_008 =
+
+
 
 //ConfManager
 MB_001 = ConfManager::_get : key %s is not defined in Conf file
@@ -137,7 +154,7 @@ MC_003 = UrlManager::setUrl :: set the new URL %s
 MC_004 = UrlManager::getCurrentLocation :: UrlManager is not usable
 MC_005 = UrlManager::_urlChangeHandler :: Location:%s, From:%s
 MC_006 = UrlManager::getCurrentStorage :: UrlManager is not usable
-MC_007 =
+MC_007 = UrlManager::init
 MC_008 =
 MC_009 =
 
