@@ -1,0 +1,14 @@
+
+TO COMPRESS THE FRAMEWORK
+
+1. Edit allInOne.php and change $mainFolder
+2. Execute the file in your browser
+3. Lanch cmd
+4. Execute the custom_rhino_charset 
+---
+cmd> cd C:\Program Files\EasyPHP\www\navx_projects_3\Dynamite\js\WZFwk\libs\shrinksafe (change only this line)
+cmd> java -jar custom_rhino_charset.jar -c ../../compress/WZFwk.js > ../../compress/WZFwk.cp.js 2>&1
+---
+5. Launch noMoreLines.php
+6. It is finish : you got a fresh compressed fwk in compress.js 
+

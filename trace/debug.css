@@ -1,0 +1,35 @@
+body, html {
+	margin:0;
+	padding:0;
+	background-color: #DBE1F0;
+	font-family: Verdana;
+	font-size: 12px;
+}
+
+h1 {
+	color: #FFFFFF;
+	font-size: 18px;
+	padding-top: 5px;
+	padding-left: 10px;
+	padding-bottom:0px;	
+	margin: 0px;
+	font-style: italic;
+}
+
+#debug {
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+	position: absolute;
+	padding:10px;
+	top: 30px;
+	left: 10px;
+	right: 10px;
+	bottom:10px;
+	overflow: auto;
+}
+
+#buttons {
+	position: absolute;
+	top:5px;
+	right:10px;
+}

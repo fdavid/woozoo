@@ -1,0 +1,143 @@
+// Initializer
+
+M1_001 = Initializer::_fwkTraceReadyHandler : initializing configuration and fwkTrace complete
+M1_002 = Initializer::_initLang : initializing langage
+M1_003 = Initializer::_langReadyHandler : initializing langage complete
+M1_004 = Initializer::_initController : initializing controller
+M1_005 = Initializer::_controllerReadyHandler : initializing controller complete
+M1_006 = Initializer::_initModel : initializing model
+M1_007 = Initializer::_modelReadyHandler : initializing model complete
+M1_008 = Initializer::_ready : FRAMEWORK READY
+
+// LangManager
+
+M2_001 = LangManager::setLang : lang: %s already loaded
+M2_002 = LangManager::get : not value defined for key [%s]
+M2_003 = LangManager::_load : loading langage %s
+M2_004 = LangManager::_loadSuccessHandler : unknow parsing method
+M2_005 = LangManager::_loadFailHandler : lang file [%s] was not loaded : %s
+M2_006 = LangManager::init : lang in confManager is undefined
+
+// ModuleManager
+
+M3_001 = ModuleManager::_initRest : unable to eval controller %s and/or model %s
+M3_002 = ModuleManager::_initRest : unknow value for type (should be either %s or %s)
+M3_003 = ModuleManager::_initRest : do not execute bindings [value = '%s']
+M3_004 = ModuleManager::_getBindId : unknow type (should be either %s or %s)
+M3_005 =
+M3_006 =
+M3_007 =
+M3_011 = ModuleManager::_initMvc()
+M3_012 = ModuleManager::_initModelBinding (lang) : %s %s %s
+M3_013 = ModuleManager::_initModelBinding : %s %s %s
+M3_014 = ModuleManager::_initControllerBinding : %s %s %s
+M3_015 = ModuleManager::bindFile : file %s
+
+
+// HelperLoaderManager
+
+M4_001 = HelperLoaderManager::_loadView : loading view %s
+M4_002 = HelperLoaderManager::_loadViewFailHandler : loading view %s failed
+M4_003 = HelperLoaderManager::_loadViewReadyHandler : unknow id %s
+M4_004 = HelperLoaderManager::_loadViewReadyHandler : OK loading view
+M4_005 = HelperLoaderManager::_controllerLoadErrorHandler : Unable to load controllerHelper
+M4_006 = HelperLoaderManager::loadHelpers : loading %s %s %s %s %s
+M4_007 = HelperLoaderManager::_loadController : loading %s
+M4_008 = HelperLoaderManager::_modelLoadErrorHandler : Unable to load modelHelper
+M4_009 = HelperLoaderManager::_compressedLoadErrorHandler : load compressed file failed
+
+// Controller
+
+M5_001 = Controller::loadModule : fail to find module %s
+M5_002 = Controller::loadModule : LoadingModule : %s
+M5_003 = Controller::loadModule : Module already loaded : %s
+M5_004 = Controller::lauchModelMethod : this method has at least 1 args, not %s
+M5_005 = Controller::lauchModelMethod : no model found corresponding to controller %s
+M5_006 = Controller::lauchModelMethod : ready to proceed : %s
+M5_007 = Controller::lauchModelMethod : failed call %s (method doesnt exist OR bad code in the method)
+M5_008 = Controller::_loadMvcFileFailHandler : mvc file [%s] was not loaded : %s
+M5_009 = Controller::_launchControllerMethod : no controller found corresponding to model %s
+M5_010 = Controller::_launchControllerMethod : ready to proceed : %s
+M5_011 = Controller::_launchControllerMethod : failed call %s
+M5_012 = Controller::_launchControllerMethod : this method has at least 1 args, not %s
+M5_013 = Controller::applyMethodToElement : %s
+M5_014 = Controller::applyMethodToElement : this method has at least 2 parameters
+M5_015 = Controller::applyMethodToElement : unknow element %s
+M5_016 = Controller::unLoadModule : unloading module %s
+M5_017 = Controller::unLoadModule : module %s is not loaded
+M5_018 = Controller::_initHelpers : unable to lauch init method on controller helper %s
+M5_019 = Controller::_initHelpers : unable to lauch init method on model helper %s
+M5_020 = Controller::unLoadModule : catching error while destroying objects %s
+M5_021 = Controller::_loadModuleConfFile : load file %s
+M5_022 = Controller::_loadMvcFile : loading file %s
+M5_023 = Controller::_loadMvcFileSuccessHandler
+M5_024 = Controller::_parseMvcFile
+M5_025 = Controller::_useMvcFile
+M5_026 = Controller::_loadFileSuccessHandler :  Loading file succeed
+M5_027 = Controller::_loadFileFailHandler : file [%s] was not loaded : %s
+M5_028 = Controller::loadModule : %s is loading... please wait
+M5_029 = Controller::unLoadModule : module %s not found
+M5_030 = Controller::unLoadModule : The module %s is loading : will try again in a few moment
+M5_031 = Controller::unLoadModule : The module %s is not loaded anymore after %s try
+M5_032 = Controller::unLoadModule : The module %s is loading : %s try
+M5_033 = Controller::unLoadModule : The module %s is still loading after so much time, stop trying
+M5_034 = 
+M5_035 = 
+M5_036 = 
+M5_037 = 
+
+
+// ScriptLoader
+
+M6_001 = ScriptLoader::load : loading file %s
+M6_002 = ScriptLoader::load : nothing to load
+
+// Model
+
+M7_001 = Model::setContextualData : new data with key = %s, value = %s
+M7_002 = Model::getContextualData : key %s doesn't exist in contextual data
+
+// BindingUtil
+M8_001 = BindingUtil::bind : args are not valid
+M8_002 = BindingUtil::bind : unable to find the element with id %s
+M8_003 = BindingUtil::bind : Unable to execute %s
+M8_004 = BindingUtil::bindListener
+M8_005 = BindingUtil::bindListener : Unable to find element with id %s
+M8_006 = BindingUtil::bindListener : Unable to execute %s (does the method exists on the controller ?)
+M8_007 = BindingUtil::bindLang
+M8_008 = BindingUtil::bindLang : Unable to find element with id %s
+M8_009 = BindingUtil::bindLang : Unable to execute %s
+M8_010 = BindingUtil::bind : cannot initializing binding data (does the attribute %s exist on the element %s ?)
+M8_011 = BindingUtil::bind : %s
+
+// SingletonUtil
+M9_001 = SingletonUtil::doSingleton %s
+
+// PluginManager
+MA_001 = PluginManager::declarePlugin : plugin with id %s already exist : override it
+MA_002 = PluginManager::apply : Unknow plugin with id %s
+MA_003 = PluginManager::_loadHandler : loading file %s succeed
+MA_004 = PluginManager::_failHandler : loading file %s failed
+
+//ConfManager
+MB_001 = ConfManager::_get : key %s is not defined in Conf file
+MB_002 = ConfManager::_ready : loading %s succeed
+MB_003 = 
+MB_004 = 
+MB_005 = 
+MB_006 = 
+MB_007 = 
+MB_008 = 
+MB_009 = 
+
+//UrlManager
+MC_001 = UrlManager::setUrl :: UrlManager is not usable
+MC_002 = UrlManager::setUrl :: the new location %s is the same as the last one, doesn't set it
+MC_003 = UrlManager::setUrl :: set the new URL %s
+MC_004 = UrlManager::getCurrentLocation :: UrlManager is not usable
+MC_005 = UrlManager::_urlChangeHandler :: Location:%s, From:%s
+MC_006 = UrlManager::getCurrentStorage :: UrlManager is not usable
+MC_007 =
+MC_008 =
+MC_009 =
+

@@ -1,0 +1,2 @@
+Decompress JavaScript compressed by /packer/ and other Compressors
+http://johannburkard.de/blog/programming/javascript/decompress-javascript-compressed-by-packer-and-other-compressors.html
