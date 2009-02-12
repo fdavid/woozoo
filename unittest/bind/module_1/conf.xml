@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf 	model="Module1Model" 	
+		controller="Module1Controller" 	
+		dynamicLoad="true"	
+		folder="unittest/bind/module_1/" 
+		version="0.1.8"
+		
+		compressed="false"		
+>
+
+	
+	<bind 			id="input1" 		attribute="value" 		propertie="inputValue"  />
+	<bind 			id="input2" 		attribute="value" 		propertie="inputValue"  />
+	
+	<bindAsListener id="button" 			event="click"  			handler="buttonClickHandler"/>
+	<bindAsListener id="inputRef" 			event="keyup"  			handler=""/>
+	
+	
+
+</conf>	

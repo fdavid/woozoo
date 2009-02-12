@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<files>
+	<item 	id="Module1" 
+			file="unittest/bind/module_1/conf.xml" 
+			executeAtInit="true" 
+	/>
+</files>

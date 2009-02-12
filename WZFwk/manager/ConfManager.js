@@ -64,7 +64,8 @@ var ConfManager = Class.create({
 									useLang: false, 
 									langFileExtension: 'conf',
 									langParseMethod: 'flat',
-										// defaultLang 
+									defaultLang: 'fr_FR', 
+
 									
 									// compression
 									useDynCompression: false,

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf 	model="Module1Model" 	
+		controller="Module1Controller" 	
+		dynamicLoad="true"	
+		folder="unittest/lang/module_1/" 
+		version="0.1.8"
+		
+		compressed="false"		
+>
+
+	
+	<bind 			id="div1" 			attribute="innerHTML" 	langPropertie="TOTO"  />
+	<bind 			id="input1" 		attribute="value" 		langPropertie="TOTO"  />
+	<bind 			id="div2" 			attribute="innerHTML" 	langPropertie="MY_KEY"  />
+	<bind 			id="input2" 		attribute="value" 		langPropertie="MY_KEY"  />
+	
+	
+	
+	<bindAsListener id="button" 			event="click"  			handler="buttonClickHandler"/>
+	
+	
+
+</conf>	

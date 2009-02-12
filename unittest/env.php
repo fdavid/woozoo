@@ -2,6 +2,7 @@
 $urlFwk = "http://localhost/js/WZFwk_multiton/";
 $urlUnitTest = "http://localhost/js/unittest/";
 $urlJs = "http://localhost/js/";
+$compressed = true;
 
 if ($compressed == true) {
 	$fwkScript = '<script type="text/javascript" src="'.$urlFwk.'compress/compress.js"></script>';

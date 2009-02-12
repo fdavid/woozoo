@@ -7,6 +7,7 @@
 		
 		compressed="false"		
 >
-
+	<bindAsListener id="buttonToto" 			event="click"  			handler="buttonTotoClickHandler"/>
+	<bindAsListener id="button42" 		event="click"  			handler="button42ClickHandler"/>
 
 </conf>	

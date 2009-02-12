@@ -14,16 +14,27 @@
 
 	<script type="text/javascript">
 		var initializer = new Initializer(); 
-		initializer.init('<?php echo $urlUnitTest; ?>url/conf.xml', 
+		initializer.init('<?php echo $urlUnitTest; ?>lang/conf.xml', 
 		{
-			mvcFile: '<?php echo $urlUnitTest; ?>url/module_1/mvc.xml',
+			mvcFile: '<?php echo $urlUnitTest; ?>lang/module_1/mvc.xml',
 			baseUrl: '<?php echo $urlJs; ?>',
-			useUrl: true
+			useLang: true
 		});
+		
+		LangManager.getInstance().add("MY_KEY", "value (en_EN)", "en_EN");
+		LangManager.getInstance().add("MY_KEY", "value (fr_FR)", "fr_FR");
+
 	</script>
 </head>
 <body>
-	<button id="buttonToto">Change URL to #toto</button>
-	<button id="button42">Change URL to #42</button>
+	<button id="button">Click here to change langage to english</button><br />
+	div1 : <div id="div1">sdsdsd</div> <br>
+	input1 : <input type="text" id="input1" value=""/> <br>
+	
+	<br>
+	<br>
+	Bind to static value :<br>
+	div2 : <div id="div2">sdsdsd</div> <br>
+	input2 : <input type="text" id="input2" value=""/> <br>
 </body>
 </html>

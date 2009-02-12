@@ -176,27 +176,33 @@ Object.extend(BindingUtil, {
 			Trace.writeError('M8_007');//BindingUtil::bindLang
 			return false;	
 		}
-		if (!$(id)) {
+		if (!elementExists(id)) {
 			FwkTrace.writeError('M8_008', id);//BindingUtil::bindLang : Unable to find element with id %s
 			return false;
 		}
 		
-		var attr = BindingUtil._resolveMethod(attribute);
-		var f = '';
+		var attr = BindingUtil._resolveMethod(attribute, 'set');
+		//var f = '';
 		
+		//if (attr == attribute) {
+			// has to replace that	
+		//	f = "$('"+id+"')."+attr+" = LangManager.getInstance().get('"+propertie+"')";
+		//} else {
+		//	// has to replace that	
+			//f = "$('"+id+"')."+attr.replace('%s', "LangManager.getInstance().get('"+propertie+"')");
+		//}
 		if (attr == attribute) {
-			// has to replace that	
-			f = "$('"+id+"')."+attr+" = LangManager.getInstance().get('"+propertie+"')";
+			$(id)[attr] = LangManager.getInstance().get(propertie);
 		} else {
-			// has to replace that	
-			f = "$('"+id+"')."+attr.replace('%s', "LangManager.getInstance().get('"+propertie+"')");
+			var split = attr.replace(")", "").split("(");
+			$(id)[split[0]](split[1].replace('%s', LangManager.getInstance().get(propertie)));
 		}
 		
-		try {
-			eval(f);
-		} catch (error) {
-			FwkTrace.writeError('M8_009', f);//BindingUtil::bindLang : Unable to execute %s
-		}
+		//try {
+		//	eval(f);
+		//} catch (error) {
+		//	FwkTrace.writeError('M8_009', f);//BindingUtil::bindLang : Unable to execute %s
+		//}
 		return true;
 	}, 
 	

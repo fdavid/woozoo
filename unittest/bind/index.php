@@ -14,16 +14,20 @@
 
 	<script type="text/javascript">
 		var initializer = new Initializer(); 
-		initializer.init('<?php echo $urlUnitTest; ?>url/conf.xml', 
+		initializer.init('<?php echo $urlUnitTest; ?>bind/conf.xml', 
 		{
-			mvcFile: '<?php echo $urlUnitTest; ?>url/module_1/mvc.xml',
-			baseUrl: '<?php echo $urlJs; ?>',
-			useUrl: true
+			mvcFile: '<?php echo $urlUnitTest; ?>bind/module_1/mvc.xml',
+			baseUrl: '<?php echo $urlJs; ?>'
 		});
 	</script>
 </head>
 <body>
-	<button id="buttonToto">Change URL to #toto</button>
-	<button id="button42">Change URL to #42</button>
+	<button id="button">Click here to change text input above values to 42</button><br />
+	Input 1 : <input type="text" value="" id="input1"/> <br>
+	Input 2 : <input type="text" value="" id="input2"/> <br>
+	<br>
+	Typing here should change both the input 1 and 2 :
+	<br>
+	<input type="text" value="" id="inputRef" />
 </body>
 </html>

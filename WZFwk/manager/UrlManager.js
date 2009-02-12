@@ -78,7 +78,7 @@ var UrlManager = Class.create({
 		});
 	
     	dhtmlHistory.initialize();
-      	dhtmlHistory.addListener(this._urlChangeHandler.bindAsEventListener(this));
+      	dhtmlHistory.addListener(this._urlChangeHandler.bind(this));
       	
       	// if there is no anchor, then the first handler execution doesn't come from init
       	if (this.getCurrentLocation() == "") {

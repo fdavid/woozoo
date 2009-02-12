@@ -40,12 +40,12 @@ var LangManager = Class.create({
 		this._data = $H({}); 
 		this._addData = [];
 
-		this._lang = "";
+		this._defaultLang = 	"";
+		this._lang =			"";
+		this._langFolder =		"";
+		this._langFileExt = 	"";
+		this._parsingMethod = 	"";
 		
-		var confManager = ConfManager.getInstance();
-		this._defaultLang = 	confManager.get('defaultLang');
-		this._langFileExt = 	confManager.get('langFileExtension');
-		this._parsingMethod = 	confManager.get('langParseMethod');
 	},
 	
 	/*************************************************/
@@ -58,7 +58,7 @@ var LangManager = Class.create({
 	add: function(key, value, lang) {
 		// correct the lang, try to find it in the conf file or use the LangManager constant
 		if (lang == undefined) {
-			lang =  this._defaultLang ? this._defaultLang : LangManager.DEFAULT_LANG;
+			lang = this._defaultLang ? this._defaultLang : LangManager.DEFAULT_LANG;
 		}
 		// create the array in case it is the first time we want to insert something on it
 		if (this._addData[lang] == undefined) {
@@ -76,10 +76,16 @@ var LangManager = Class.create({
 	 *
 	 * */
 	init: function(file) {
-		this._lang = ConfManager.getInstance().get('lang');
+		var confManager = ConfManager.getInstance();
+		this._defaultLang = 	confManager.get('defaultLang');
+		this._lang =			confManager.get('lang');
+		this._langFolder =		confManager.get('langFolder');
+		this._langFileExt = 	confManager.get('langFileExtension');
+		this._parsingMethod = 	confManager.get('langParseMethod');
+		
 		if (!this._lang) {
 			FwkTrace.writeWarning('M2_006');
-			return false;
+			this._lang = this._defaultLang;
 		}
 		this._file = this._getLangFileName();
 		this._load();	
@@ -130,7 +136,7 @@ var LangManager = Class.create({
 	 *
 	 * */
 	_getLangFileName: function() {
-		return ConfManager.getInstance().get('langFolder')+this._lang+"."+this._langFileExt;
+		return this._langFolder+this._lang+"."+this._langFileExt;
 	}, 
 	
 	/**

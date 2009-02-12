@@ -16,7 +16,7 @@ M2_002 = LangManager::get : not value defined for key [%s]
 M2_003 = LangManager::_load : loading langage %s
 M2_004 = LangManager::_loadSuccessHandler : unknow parsing method
 M2_005 = LangManager::_loadFailHandler : lang file [%s] was not loaded : %s
-M2_006 = LangManager::init : lang in confManager is undefined
+M2_006 = LangManager::init : lang in confManager is undefined, using default lang
 
 // ModuleManager
 
