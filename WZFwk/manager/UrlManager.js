@@ -84,6 +84,7 @@ var UrlManager = Class.create({
       	if (this.getCurrentLocation() == "") {
       		this._isFirst = false;
       	} else {
+      		//alert('URlManager : '+this.getCurrentLocation());
 	      	// should not be here but i probably break something when changing the rsh code	
 	      	// ie : RSH should take care of that
 	      	// I use defer so i don't get a stack error on IE7

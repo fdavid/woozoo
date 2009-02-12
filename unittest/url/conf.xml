@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+	<framework>
+		<item version="1.0.7" />
+		<folder>		
+			<item fwkFolder="WZFwk_multiton/" />
+			<item pluginFolder="WZPlugin/" />
+		</folder>
+		<debug>
+			<item debugWay="console" />
+			<item debug="true" />
+			<item debugFwk="true" />
+			<item debugBinding="false" />
+			<item debugLaunchMethod="false" />
+			<item showTiming="true" />
+			<item debugUrl="true" />
+		</debug>
+		<lang>
+			<item langFileExtension="conf" />
+			<item langParseMethod="flat" />
+			<item defaultLang="fr_FR" />
+		</lang>
+		<compression>
+			<item useDynCompression="false" />
+			<item dynCompressionUrl="WZFwk_multiton/php/dyn/dyn.php" />
+			<item usePacker="true" />
+			<item useCache="true" />
+			<item compressedName="compress" />
+		</compression>
+		<url>
+			<item addBaseUrl="true" />
+		</url>
+		<view>
+			<item viewFileExt="html" />
+		</view>
+		<getset>
+			<item getSuffix="get_" />
+			<item setSuffix="set_" />
+		</getset>
+	</framework>
+	<application>
+	</application>
+</items>

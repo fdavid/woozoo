@@ -54,6 +54,7 @@ window.dhtmlHistory = {
 		var UA = navigator.userAgent.toLowerCase();
 		var platform = navigator.platform.toLowerCase();
 		var vendor = navigator.vendor || "";
+	
 		if (vendor === "KDE") {
 			this.isKonqueror = true;
 			this.isSupported = false;
@@ -63,7 +64,8 @@ window.dhtmlHistory = {
 		} else if (typeof document.all !== "undefined") {
 			this.isIE = true;
 			this.isSupported = true;
-		} else if (vendor.indexOf("Apple Computer, Inc.") > -1) {
+		// MODIFIED	
+		} else if (vendor.indexOf("Apple Computer, Inc.") > -1 && UA.indexOf("gecko") == -1) {
 			this.isSafari = true;
 			this.isSupported = (platform.indexOf("mac") > -1);
 		} else if (UA.indexOf("gecko") != -1) {
@@ -267,6 +269,7 @@ window.dhtmlHistory = {
 
 	/*Public*/
 	getCurrentLocation: function() {
+		// MODIFIED
 		var r = (this.isSafari
 			? this.getSafariState()
 			: this.getCurrentHash()
@@ -385,7 +388,7 @@ window.dhtmlHistory = {
 		//////////////////////////// MODIFIED /////////////////////////
 		//document.write(safariHTML);
 		$$('body')[0].insert({top:safariHTML});
-		
+
 		this.safariStack = document.getElementById(stackID);
 		this.safariLength = document.getElementById(lengthID);
 		if (!historyStorage.hasKey(this.PAGELOADEDSTRING)) {
