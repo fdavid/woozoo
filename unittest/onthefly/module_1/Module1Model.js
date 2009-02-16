@@ -11,11 +11,5 @@ var Module1Model = Class.create(ModelHelper, {
 	
 	init: function($super) {
 		$super();
-		this.set_divInitialize(this.get_inputValue());
-  	},
-  	
-  	changeValue: function(data) {
-  		data = (data == undefined) ? '42' : data
-  		this.set_inputValue(data);
   	}
 });

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf 	model="Module2Model" 	
+		controller="Module2Controller" 	
+		dynamicLoad="true"	
+		folder="unittest/modulemultiple/module_2/" 
+		version="0.1.8"
+		type="simple"
+		compressed="false"		
+>
+	<bindAsListener id="buttonAdd" 		event="click"  			handler="addButtonClickHandler"/>
+
+</conf>	

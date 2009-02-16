@@ -14,24 +14,21 @@
 
 	<script type="text/javascript">
 		var initializer = new Initializer(); 
-		initializer.init('<?php echo $urlUnitTest; ?>bind/conf.xml', 
+		initializer.init('<?php echo $urlUnitTest; ?>onthefly/conf.xml', 
 		{
-			mvcFile: '<?php echo $urlUnitTest; ?>bind/module_1/mvc.xml',
+			mvcFile: '<?php echo $urlUnitTest; ?>onthefly/mvc.xml',
 			baseUrl: '<?php echo $urlJs; ?>'
 		});
+		
+		
 	</script>
 </head>
 <body>
-	<button id="button">Click here to change text input above values to 42</button><br />
-	Input 1 : <input type="text" value="35" id="input1"/> <br>
-	Input 2 : <input type="text" value="34" id="input2"/> <br>
-	<br>
-	At the initialization, the value bellow show be the value of input 1 :<br>
-	<div id="div3"></div>
+	<button id="buttonLoad">Click here to load the module</button><br />
+	<button id="buttonUnLoad">Click here to unload the module that will reload</button>
+	<button id="buttonUnLoad2">Click here to unload the module that will normally not reload</button>
 	
+	<div id="module2Container"></div>
 	
-	Typing here should change both the input 1 and 2 :
-	<br>
-	<input type="text" value="" id="inputRef" />
 </body>
 </html>

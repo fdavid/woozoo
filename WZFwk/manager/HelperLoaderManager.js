@@ -64,34 +64,43 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */  
 	_loadView: function() {
-		var file = this._moduleProperties.get('view');
-		// if we have a view to load
-		if (file != null && file != '' && file != undefined) {
-			// we test if the element that will contain the view exists,
-			// if not we have just to die, but we try to load the rest
-			var view = this._moduleProperties.get('addViewInId');
-			if (!$(view)) {
-				FwkTrace.writeError('M4_003', view);//'HelperLoaderManager::_loadViewReadyHandler : unknow id '+this.addViewToId);
+		var viewContent = this._moduleProperties.get('viewContent');
+		if (viewContent == undefined) {
+	
+			var file = this._moduleProperties.get('view');
+			// if we have a view to load
+			if (file != null && file != '' && file != undefined) {
+				// we test if the element that will contain the view exists,
+				// if not we have just to die, but we try to load the rest
+				var view = this._moduleProperties.get('addViewInId');
+				if (!elementExists(view)) {
+					FwkTrace.writeError('M4_003', view);//'HelperLoaderManager::_loadViewReadyHandler : unknow id '+this.addViewToId);
+					this._loadRest();
+					return false;
+				}
+				// adding extension
+				file += '.'+ConfManager.getInstance().get('viewFileExt');
+				
+				// adding the version number (cache killer)
+				file += '?v='+this._moduleProperties.get('version');
+				FwkTrace.writeMessage('M4_001', file); //'HelperLoaderManager::_loadView : loading view '+file);
+				
+				// lauching request
+				new Ajax.Request(file, {
+					method: 'get',
+					onSuccess: this._loadViewReadyHandler.bindAsEventListener(this),
+					onFailure: this._loadViewFailHandler.bindAsEventListener(this),
+					evalJS: false,
+					evalJSON: false,
+					sanitizeJSON: false
+				});
+			// we are loading the rest	
+			} else {
 				this._loadRest();
-				return false;
 			}
-			// adding the version number (cache killer)
-			file += '?v='+this._moduleProperties.get('version');
-			FwkTrace.writeMessage('M4_001', file); //'HelperLoaderManager::_loadView : loading view '+file);
-			
-			// lauching request
-			new Ajax.Request(file, {
-				method: 'get',
-				onSuccess: this._loadViewReadyHandler.bindAsEventListener(this),
-				onFailure: this._loadViewFailHandler.bindAsEventListener(this),
-				evalJS: false,
-				evalJSON: false,
-				sanitizeJSON: false
-			});
-		// we are loading the rest	
 		} else {
-			this._loadRest();
-		}
+			this._addLoadedViewToDOM(viewContent);
+		}	
 		return true;
 	},
 	
@@ -107,9 +116,20 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_loadViewReadyHandler: function(transport) {
-		var view = this._moduleProperties.get('addViewInId');
-		$(view).update(transport.responseText);
 		FwkTrace.writeMessage('M4_004');//'HelperLoaderManager::_loadViewReadyHandler : OK loading view ');
+		
+		var response = transport.responseText;
+		this._moduleProperties.set('viewContent', response);
+		this._addLoadedViewToDOM(response);
+	},
+	
+	_addLoadedViewToDOM: function(viewContent) {
+		var view = this._moduleProperties.get('addViewInId');
+		if (elementExists(view)) {
+			$(view).update(viewContent);
+		} else {
+			FwkTrace.writeError('M4_010',  view); //
+		}
 		this._loadRest();
 	},
 	

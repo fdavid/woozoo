@@ -45,6 +45,7 @@ M4_006 = HelperLoaderManager::loadHelpers : loading %s %s %s %s %s
 M4_007 = HelperLoaderManager::_loadController : loading %s
 M4_008 = HelperLoaderManager::_modelLoadErrorHandler : Unable to load modelHelper
 M4_009 = HelperLoaderManager::_compressedLoadErrorHandler : load compressed file failed
+M4_010 = HelperLoaderManager::_addLoadedViewToDOM : cannot add the view in %s, it doesn't exist  
 
 // Controller
 

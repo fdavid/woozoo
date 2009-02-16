@@ -11,6 +11,7 @@
 	
 	<bind 			id="input1" 		attribute="value" 		propertie="inputValue"  />
 	<bind 			id="input2" 		attribute="value" 		propertie="inputValue"  />
+	<bind 			id="div3" 			attribute="innerHTML" 	propertie="divInitialize"  />
 	
 	<bindAsListener id="button" 			event="click"  			handler="buttonClickHandler"/>
 	<bindAsListener id="inputRef" 			event="keyup"  			handler=""/>

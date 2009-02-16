@@ -56,6 +56,7 @@ var Controller = Class.create({
 		controllerHelperClass : The class of the controller
 		
 		view: The path to the view
+		viewContent: thec ontent of the view
 		addViewInId: When we load the view, where to put it
 		dynamicLoad: Do we automatically load the JS
 		folder: Folder to the JS files
@@ -208,7 +209,9 @@ var Controller = Class.create({
 		if (elementExists(addViewInId)) {
 			$(addViewInId).update();
 		}
-		
+		if (!willReload) {
+			mvcProp.unset('viewContent');
+		}
 		
 		var confXml = window[mvcProp.get('id')+'Properties'];
 		if (!confXml) {
