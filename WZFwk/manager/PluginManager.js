@@ -23,20 +23,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
-var PluginManager = Class.create({
+var PluginManager = Class.create(EventDispatcher, {
 	
 	/**
 	 *
 	 * */
 	initialize: function() {
 		this._plugins = [];
-		
 		this._stack = [];
 		this._busy = false;
-		
-		this._loadHandler = this._loadHandler.bindAsEventListener(this);
-		this._failHandler = this._failHandler.bindAsEventListener(this);
-		
 	},
 	
 	init: function() {
@@ -47,7 +42,7 @@ var PluginManager = Class.create({
 		var item = null;
 		var reg = new RegExp(pluginFolder,"g");
 		
-		for (var i = 0; i < scriptsLen; i++) {
+		for (var i = scriptsLen - 1; i > 0; --i) {
 			item = scripts[i];
 			var src = item.src;
 			if (src.match(reg)) {
@@ -59,16 +54,17 @@ var PluginManager = Class.create({
 		}
 	},
 	
+	isLoaded: function(id) {
+		if (this._plugins[id] && this._plugins[id].get('loaded')) 
+			return true;
+		return false;	
+	},
+	
 	/**
 	 *
 	 * */
 	declarePlugin: function(id, src, className, version, w3cStandard, loaded) {
 		FwkTrace.writeMessage('MA_005', id, src);//'PluginManager::declarePlugin : declare plugin '+id+' with src '+src);
-		
-		//if (!id) {
-		//	Trace.writeError('PluginManager::declarePlugin : id is not defined ['+id+']');
-		//	return false;
-		//}
 		
 		if (this._plugins[id]) {
 			FwkTrace.writeWarning('MA_001', id);//'PluginManager::declarePlugin : plugin with id '+id+' already exist : override it');
@@ -87,15 +83,33 @@ var PluginManager = Class.create({
 	 * */
 	apply: function(id) {
 		
+		if (Object.isArray(id)) {
+			var res = [];
+			for (var i = 0, len = id.length; i < len; i++) {
+				res.push(this._doApply(id[i]));
+			}
+			for (var i = 0, len = res.length; i < len; i++) {
+				if (res[i] == false) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return this._doApply(id);
+		}
+	},
+	
+	_doApply: function(id) {
 		if (!this._plugins[id]) {
 			FwkTrace.writeError('MA_002', id);//'PluginManager::apply : Unknow plugin with id '+id);
 			return false;
 		}
 		
-		this._stack.push(id);
-		
 		if (!this._plugins[id].get('loaded')) {
+			this._stack.push(id);
 			return this._load()
+		} else {
+			FwkTrace.writeMessage('MA_006', id); //'PluginManager::_doApply : plugin '+id+' already loaded (do not load it again)')
 		}
 		return false;
 	},
@@ -120,37 +134,33 @@ var PluginManager = Class.create({
 		if (this._plugins[id].get('version') != '') {
 			file += '?v='+this._plugins[id].get('version');
 		}
+		
 		var scriptLoader = new ScriptLoader(file, className);
-		document.observe(ScriptLoader.SUCCEED, this._loadHandler);
-		document.observe(ScriptLoader.FAILED, this._failHandler);
+		scriptLoader.addEventListener(Event.COMPLETE, this._loadHandler.bind(this));
+		scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, this._failHandler.bind(this));
 		scriptLoader.load()
 	},
 	
-	_loadHandler: function(event) {
-		FwkTrace.writeMessage('MA_003', event.memo.file);//'PluginManager::_loadHandler : loading file '+event.memo.file+' succeed');
-
+	_loadHandler: function(memo) {
+		FwkTrace.writeMessage('MA_003', memo.file);//'PluginManager::_loadHandler : loading file '+event.memo.file+' succeed');
+		this._loadNext(); // PluginManager::_loadHandler : loading file '+event.memo.file+' succeed');
+	},
+	
+	_failHandler: function(memo) {
+		FwkTrace.writeError('MA_004', memo.file);//
+		this._loadNext(); // PluginManager::_failHandler : loading file '+event.memo.file+' failed');
+	},
+	
+	_loadNext: function() {
+	
 		this._busy = false;		
+	
 		if (this._stack.length == 0) {
-			document.stopObserving(ScriptLoader.SUCCEED, this._loadHandler);
-			document.stopObserving(ScriptLoader.FAILED, this._failHandler);
-			document.fire(PluginManager.READY_EVENT);
+			this.dispatchEvent(WZEvent.READY);
 		} else {
 			this._load();
 		}
-	},
-	
-	_failHandler: function() {
-		FwkTrace.writeError('MA_004', event.memo.file);//'PluginManager::_failHandler : loading file '+event.memo.file+' failed');
-		document.stopObserving(ScriptLoader.SUCCEED, this._loadHandler);
-		document.stopObserving(ScriptLoader.FAILED, this._failHandler);
 	}
-});
-
-/**
- * Static property
- * */
-Object.extend(PluginManager, {	
-	READY_EVENT:"pluginManagerEvent:ready"
 });
 
 /**

@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var ConfManager = Class.create({
+var ConfManager = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -220,15 +220,6 @@ var ConfManager = Class.create({
 				this._data.set(key, defaultPair[key]);
 			}
 		}
-		
-		
-		/*
-		this._defaultIfUndefined.each(function(pair) {
-			if (this._data.get(key) == undefined) {
-				this._data.set(key, this._defaultIfUndefined.get(key));
-			}
-		}.bind(this));
-		*/
 	},
 	
 	/**
@@ -248,12 +239,6 @@ var ConfManager = Class.create({
 					this._data.set(url, urlUtil_makeAbsolute_function(value, baseUrl));
 				}
 			}
-			/*this._urls.each(function(value) {
-				if (this._data.get(value) != undefined) {
-					this._data.set(value, UrlUtil.makeAbsolute(this._data.get(value), this._data.get('baseUrl')));
-				}
-			}.bind(this));
-			*/
 		}
 	},
 	
@@ -283,17 +268,10 @@ var ConfManager = Class.create({
 	 *
 	 * */
 	_fire: function() {
-		document.fire(ConfManager.CONF_READY_EVENT);
+		this.dispatchEvent(WZEvent.READY);
 	}
 });
 	
-/**
- * Static property
- * */
-Object.extend(ConfManager, {
-	CONF_READY_EVENT : 'confEvent:ready'
-});
-
 /**
  * Singleton
  * */

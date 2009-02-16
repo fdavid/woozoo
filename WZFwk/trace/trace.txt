@@ -27,7 +27,7 @@ M3_004 = ModuleManager::_getBindId : unknow type (should be either %s or %s)
 M3_005 = ModuleManager::_countModule : %s do not contains the string [], stop execution
 M3_006 =
 M3_007 =
-M3_011 = ModuleManager::_initMvc()
+M3_011 = ModuleManager::_initMvc() : your module conf file doesn't contains a model name or a controller name
 M3_012 = ModuleManager::_initModelBinding (lang) : %s %s %s
 M3_013 = ModuleManager::_initModelBinding : %s %s %s
 M3_014 = ModuleManager::_initControllerBinding : %s %s %s
@@ -97,7 +97,7 @@ M5_045 = Controller::_initHelpers : Unable to set properties on model or control
 M5_046 = Controller::_initHelpers : Unable to init model or controller helper : %s
 M5_047 = Controller::_initHelpers : %s require the application data [%s] (please complete your main conf file or the second parameter of the initializer)
 M5_048 = Controller::_initHelpers : problem while checking required key : %s
-
+M5_049 = Controller::_loadDynFileFailedHandler : fail loading dyn
 
 // ScriptLoader
 
@@ -131,7 +131,7 @@ MA_002 = PluginManager::apply : Unknow plugin with id %s
 MA_003 = PluginManager::_loadHandler : loading file %s succeed
 MA_004 = PluginManager::_failHandler : loading file %s failed
 MA_005 = PluginManager::declarePlugin : declare plugin %s with src %s
-MA_006 =
+MA_006 = PluginManager::_doApply : plugin %s already loaded (do not load it again)
 MA_007 =
 MA_008 =
 

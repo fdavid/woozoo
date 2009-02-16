@@ -28,7 +28,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  * This file could be a lot compressed 
  * The 3 groups (model, controller and compressed) loading are quite the same
  * */
-var HelperLoaderManager = Class.create({
+var HelperLoaderManager = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -39,7 +39,7 @@ var HelperLoaderManager = Class.create({
 	 * */
 	initialize: function() {
 		this._moduleProperties = $H({});
-		this._handlers = {};
+		//this._handlers = {};
 	},
 	
 	/*************************************************/
@@ -78,8 +78,30 @@ var HelperLoaderManager = Class.create({
 					this._loadRest();
 					return false;
 				}
+				
 				// adding extension
-				file += '.'+ConfManager.getInstance().get('viewFileExt');
+				var ext = ConfManager.getInstance().get('viewFileExt');
+				if (ext != undefined && ext != "") {
+					file += '.'+ConfManager.getInstance().get('viewFileExt');
+				}
+				
+				// search some data to add in the url
+				var reg = new RegExp(/ApplicationData\.([-a-z0-9_]+)/gi);
+				var result = reg.exec(file);
+				if (result) {
+					for (var i = result.length - 1; i >= 0; --i) {
+						var item = result[i];
+						if (item[15] == '.') {
+							var split = item.split('.');
+							var appData = ConfManager.getInstance().getApplicationData(split[1]);
+							if (!appData) {
+								appData = "";
+							}
+							var localRef = new RegExp("\\\["+item+"\\\]", "g");
+							file = file.replace(localRef, appData);
+						}
+					}
+				}
 				
 				// adding the version number (cache killer)
 				file += '?v='+this._moduleProperties.get('version');
@@ -144,15 +166,10 @@ var HelperLoaderManager = Class.create({
 			FwkTrace.writeMessage('M4_007', file);
 			
 			var scriptLoader = new ScriptLoader(file, this._moduleProperties.get('controllerHelper'));
-			
-			this._handlers.succeed = 	this._controllerLoadHandler.bindContext(this);
-			this._handlers.failed =		this._controllerLoadErrorHandler.bindContext(this);
-			
-			document.observe(ScriptLoader.SUCCEED, 	this._handlers.succeed);
-			document.observe(ScriptLoader.FAILED, 	this._handlers.failed);
+			scriptLoader.addEventListener(Event.COMPLETE, this._controllerLoadHandler.bind(this));
+			scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, this._controllerLoadErrorHandler.bind(this));
 			scriptLoader.load();
 		} else {
-			//trace('_loadController');
 			this._loadModel();
 		}
 	},
@@ -161,7 +178,6 @@ var HelperLoaderManager = Class.create({
 	 *http://localhost/navx_projects/Dynamite/js/Test/index.php
 	 * */
 	_controllerLoadHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		this._loadModel();
 	},
 	
@@ -169,7 +185,6 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_controllerLoadErrorHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		FwkTrace.writeError('M4_005');//'HelperLoaderManager::_controllerLoadErrorHandler : Unable to load controllerHelper')
 	},
 	
@@ -183,12 +198,8 @@ var HelperLoaderManager = Class.create({
 			var file = this._getFileName('modelHelper');
 		
 			var scriptLoader = new ScriptLoader(file, this._moduleProperties.get('modelHelper'));
-			
-			this._handlers.succeed 	=			this._modelLoadHandler.bindContext(this);
-			this._handlers.failed 	= 			this._modelLoadErrorHandler.bindContext(this);
-			
-			document.observe(ScriptLoader.SUCCEED, 	this._handlers.succeed);
-			document.observe(ScriptLoader.FAILED, 	this._handlers.failed);
+			scriptLoader.addEventListener(Event.COMPLETE, this._modelLoadHandler.bind(this));
+			scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, this._modelLoadErrorHandler.bind(this));
 			scriptLoader.load();
 		} else {
 			this._ready();
@@ -199,7 +210,6 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_modelLoadHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		this._ready();
 	},
 	
@@ -207,7 +217,6 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_modelLoadErrorHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		FwkTrace.writeError('M4_008');//'HelperLoaderManager::_modelLoadErrorHandler : Unable to load modelHelper')
 	},
 	
@@ -219,13 +228,8 @@ var HelperLoaderManager = Class.create({
 	_loadCompressed: function() {
 		if (!elementExists('js_'+this._moduleProperties.get('modelHelper'))) {
 			var scriptLoader = new ScriptLoader(this._getFileName(), this._moduleProperties.get('modelHelper'));
-			
-			this._handlers.succeed = 	this._compressedLoadHandler.bindContext(this);
-			this._handlers.failed =	 	this._compressedLoadErrorHandler.bindContext(this);
-			
-			document.observe(ScriptLoader.SUCCEED, 	this._handlers.succeed);
-			document.observe(ScriptLoader.FAILED, 	this._handlers.failed);
-	
+			scriptLoader.addEventListener(Event.COMPLETE, this._compressedLoadHandler.bind(this));
+			scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, this._compressedLoadErrorHandler.bind(this));
 			scriptLoader.load()
 		} else {
 			this._ready();
@@ -236,7 +240,6 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_compressedLoadHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		this._ready();
 	}, 
 	
@@ -244,7 +247,6 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_compressedLoadErrorHandler: function(event) {
-		this._clearScriptLoaderObservation();
 		FwkTrace.writeError('M4_009'); // HelperLoaderManager::_compressedLoadErrorHandler : load compressed file failed
 	},
 	
@@ -262,14 +264,6 @@ var HelperLoaderManager = Class.create({
 			file = this._moduleProperties.get(name);
 			
 		return this._moduleProperties.get('folder')+file+".js?v="+this._moduleProperties.get('version');
-	},
-	
-	/**
-	 * 
-	 * */
-	_clearScriptLoaderObservation: function() {
-		document.stopObserving(ScriptLoader.SUCCEED, 	this._handlers.succeed);
-		document.stopObserving(ScriptLoader.FAILED, 	this._handlers.failed);
 	},
 	
 	/**
@@ -291,18 +285,10 @@ var HelperLoaderManager = Class.create({
 	 *
 	 * */
 	_ready: function() {
-		document.fire(HelperLoaderManager.HELPER_READY_EVENT);
-		//delete this._handlers;
+		this.dispatchEvent(WZEvent.READY);
 	}
 });
 	
-/**
- * Static property
- * */
-Object.extend(HelperLoaderManager, {
-	HELPER_READY_EVENT : 'helperEvent:ready'
-});
-
 /**
  * Singleton
  * */

@@ -182,15 +182,6 @@ Object.extend(BindingUtil, {
 		}
 		
 		var attr = BindingUtil._resolveMethod(attribute, 'set');
-		//var f = '';
-		
-		//if (attr == attribute) {
-			// has to replace that	
-		//	f = "$('"+id+"')."+attr+" = LangManager.getInstance().get('"+propertie+"')";
-		//} else {
-		//	// has to replace that	
-			//f = "$('"+id+"')."+attr.replace('%s', "LangManager.getInstance().get('"+propertie+"')");
-		//}
 		if (attr == attribute) {
 			$(id)[attr] = LangManager.getInstance().get(propertie);
 		} else {
@@ -198,11 +189,6 @@ Object.extend(BindingUtil, {
 			$(id)[split[0]](split[1].replace('%s', LangManager.getInstance().get(propertie)));
 		}
 		
-		//try {
-		//	eval(f);
-		//} catch (error) {
-		//	FwkTrace.writeError('M8_009', f);//BindingUtil::bindLang : Unable to execute %s
-		//}
 		return true;
 	}, 
 	

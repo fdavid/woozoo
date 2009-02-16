@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var ScriptLoader = Class.create({
+var ScriptLoader = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -56,29 +56,6 @@ var ScriptLoader = Class.create({
 			this._element = new Element('script', {src: this._file, type:"text/javascript", id:'js_'+this._className});
 			// IE doesn't dispatch the load event on dynamic script loading but readystatechange
 			if (Prototype.Browser.IE) {
-				/*var internalThis = this;
-				var count = 0;
-				// we do test if the model Class is defined or not
-				var interval = setInterval(function() {
-					try {
-						if (eval(internalThis._className) != undefined) {
-							internalThis._loadedHandler();
-							clearInterval(interval);
-						}
-					} catch (error) {}
-					count++;
-					if (count > 100 * 2) { // 2seconds
-						internalThis._errorHandler();
-						clearInterval(interval);
-					}
-				}, 10);*/
-				
-				/*var str = "";
-				for (var key in event) {
-					str += key+' : '+event[key]+', <br>';
-				}
-				$$('body')[0].update(str);
-				*/
 				var internalThis = this;
 				this._element.observe('readystatechange', function(event){ 
 					if (!this._loaded && (this.readyState == 'loaded' || this.readyState == 'complete')) {
@@ -115,9 +92,9 @@ var ScriptLoader = Class.create({
 	 * */
 	_loadedHandler: function(event) {
 		if (Prototype.Browser.IE) {
-			this._fire.bind(this).defer(ScriptLoader.SUCCEED);
+			this._fire.bind(this).defer(Event.COMPLETE/*ScriptLoader.SUCCEED*/);
 		} else {
-			this._fire(ScriptLoader.SUCCEED);
+			this._fire(Event.COMPLETE/*ScriptLoader.SUCCEED*/);
 		}
 	},
 	
@@ -125,7 +102,7 @@ var ScriptLoader = Class.create({
 	 *
 	 * */
 	_errorHandler: function(event) {
-		this._fire(ScriptLoader.FAILED);
+		this._fire(IOErrorEvent.IO_ERROR/*ScriptLoader.SUCCEED*/);
 	},
 	
 	_fire: function(value) {
@@ -139,12 +116,12 @@ var ScriptLoader = Class.create({
 		delete this._handlers;
 		delete this._element;
 
-		document.fire(value, {file:this._file});
+		this.dispatchEvent(value, {file:this._file});
 	}
 });
 
-Object.extend(ScriptLoader, {
-	SUCCEED:'scriptLoaderEvent:succeed',
-	FAILED:'scriptLoaderEvent:failed'
-});
+//Object.extend(ScriptLoader, {
+//	SUCCEED:'scriptLoaderEvent:succeed',
+//	FAILED:'scriptLoaderEvent:failed'
+//});
 	

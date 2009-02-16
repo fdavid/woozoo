@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var LangManager = Class.create({
+var LangManager = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -175,7 +175,7 @@ var LangManager = Class.create({
 		} else {
 			ModuleManager.getInstance().executeLangBindings();
 		}
-		document.fire(LangManager.LANG_CHANGE, {lang: this._lang});
+		this.dispatchEvent(Event.CHANGE, {lang: this._lang});
 	},
 	
 	/**
@@ -190,7 +190,7 @@ var LangManager = Class.create({
 	 * */
 	_ready: function() {
 		this._isInit = false;
-		document.fire(LangManager.LANG_READY_EVENT);
+		this.dispatchEvent(WZEvent.READY);
 	}
 });
 	
@@ -198,8 +198,6 @@ var LangManager = Class.create({
  * Static property
  * */
 Object.extend(LangManager, {
-	LANG_READY_EVENT : 'langEvent:ready',
-	LANG_CHANGE: 'langEvent:change',
 	PARSE_LIKE_XML : 'xml',
 	PARSE_LIKE_FLAT : 'flat',
 	DEFAULT_LANG : 'fr_FR'

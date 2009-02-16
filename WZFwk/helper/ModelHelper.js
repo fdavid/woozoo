@@ -46,13 +46,13 @@ var ModelHelper = Class.create(Helper, {
 	 * this method is called when you unload a module
 	 * */
 	destroy: function() {
-		document.stopObserving(Model.CONTEXTUAL_DATA_CHANGE_EVENT, 		this._handler.data);
+		Model.getInstance().removeEventListener(Event.CHANGE, this._handler.data);
 		
 		if (UrlManager.getInstance().getIsUsable()) {
-			document.stopObserving(UrlManager.URL_CHANGE, 				this._handler.url);
+			UrlManager.getInstance().removeEventListener(Event.CHANGE, this._handler.url);
 		}
 		if (ConfManager.getInstance().get('useLang') == true) {
-			document.stopObserving(LangManager.LANG_CHANGE, 			this._handler.lang);
+			LangManager.getInstance().removeEventListener(Event.CHANGE, this._handler.lang);
 		}
 		// free memory
 		delete this._handler;
@@ -107,19 +107,19 @@ var ModelHelper = Class.create(Helper, {
 	},
 	
 	_initDataListener: function() {
-		this._handler.data =  	this._contextualDataChangeHandler.bindAsRealEventListener(this);
-		var data = document.observe(Model.CONTEXTUAL_DATA_CHANGE_EVENT, 		this._handler.data);
-		
+		this._handler.data =  	this._contextualDataChangeHandler.bind(this);//.bindAsRealEventListener(this);
+		Model.getInstance().addEventListener(Event.CHANGE, this._handler.data);
 	},
 	
 	_initUrlListener: function() {
 		this._handler.url = 	this._urlChangeHandler.bindAsRealEventListener(this);
-		document.observe(UrlManager.URL_CHANGE, 				this._handler.url);
+		UrlManager.getInstance().addEventListener(Event.CHANGE, this._handler.url);
+		
 	},
 	
 	_initLangListener: function() {
 		this._handler.lang = 	this._langChangeHandler.bindAsRealEventListener(this);
-		document.observe(LangManager.LANG_CHANGE, 				this._handler.lang);
+		LangManager.getInstance().addEventListener(Event.CHANGE, this._handler.lang);
 	},
 	
 	/**
@@ -155,20 +155,18 @@ var ModelHelper = Class.create(Helper, {
 	/**						PRIVATE					**/
 	/*************************************************/
 	
-	_contextualDataChangeHandler: function(event) {
-		var memo = event.memo;
+	_contextualDataChangeHandler: function(memo) {
 		if (this._isContextualDataForMe(memo.toList)) {
 			this.contextualDataChangeHandler(memo.name, memo.value);
 		}	
 	},
 	
-	_urlChangeHandler: function(event) {
-		var memo = event.memo;
+	_urlChangeHandler: function(memo) {
 		this.urlChangeHandler(memo.location, memo.data, memo.from);
 	},
 	
-	_langChangeHandler: function(event) {
-		this.langChangeHandler(event.memo.lang);
+	_langChangeHandler: function(memo) {
+		this.langChangeHandler(memo.lang);
 	},
 	
 	_isContextualDataForMe: function(toList) {

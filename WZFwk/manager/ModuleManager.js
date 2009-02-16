@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var ModuleManager = Class.create({
+var ModuleManager = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -68,7 +68,7 @@ var ModuleManager = Class.create({
 	executeLangBindings: function() {
 		this._langBinding.each(function(item) {
 			BindingUtil.bindLang(item.id, item.attribute, item.propertie);
-		});//.bind(this));
+		});
 	},
 	
 	/**
@@ -113,15 +113,7 @@ var ModuleManager = Class.create({
 	 *
 	 * */
 	_init: function() {
-		document.observe(HelperLoaderManager.HELPER_READY_EVENT, this._helpersReadyHandler.bindAsEventListener(this));
-		document.observe(ModuleManager.LOAD_READY_EVENT, this._loadReadyHandler.bindAsEventListener(this));
-	},
-	
-	/**
-	 *
-	 * */
-	_loadReadyHandler: function(event) {
-		this._initBindings();
+		HelperLoaderManager.getInstance().addEventListener(WZEvent.READY, this._helpersReadyHandler.bind(this))
 	},
 	
 	/**
@@ -132,15 +124,16 @@ var ModuleManager = Class.create({
 		if (!res) {
 			this._initRest();
 		} else {
-			this._pluginManagerReadyPropertie = this._pluginManagerReadyHandler.bindAsEventListener(this);
-			document.observe(PluginManager.READY_EVENT, this._pluginManagerReadyPropertie);
+			this._pluginManagerReadyPropertie = this._pluginManagerReadyHandler.bind(this);
+			PluginManager.getInstance().addEventListener(WZEvent.READY, this._pluginManagerReadyPropertie);
 		}
 	},
 	
-	_pluginManagerReadyHandler: function(event) {
-		this._initRest();
-		document.stopObserving(PluginManager.READY_EVENT, this._pluginManagerReadyPropertie);
+	_pluginManagerReadyHandler: function() {
+		PluginManager.getInstance().removeEventListener(WZEvent.READY, this._pluginManagerReadyPropertie);
 		this._pluginManagerReadyPropertie = null;
+
+		this._initRest();
 	},
 	
 	_initRest: function() {
@@ -228,7 +221,6 @@ var ModuleManager = Class.create({
 	_initMvc: function () {
 		var booleanUtil_toBoolean_function = BooleanUtil.toBoolean;
 		var itemUtil_getAttribute_function = ItemUtil.getAttribute;
-		
 		var conf = window[this._currentModuleProperties.get('id')+'Properties'];
 		if (!conf) {
 			conf = 	this._currentModuleProperties.get('confXml').getElementsByTagName('conf')[0];		
@@ -236,9 +228,9 @@ var ModuleManager = Class.create({
 		
 		var model = 				itemUtil_getAttribute_function(conf, 'model');
 		var controller = 			itemUtil_getAttribute_function(conf, 'controller');
-		
+
 		if (model == null || controller == null) {
-			Trace.writeError('M3_011');//'ModuleManager._initMvc()');
+			FwkTrace.writeError('M3_011');//'ModuleManager._initMvc()');
 			return false;
 		}
 		
@@ -278,7 +270,7 @@ var ModuleManager = Class.create({
 											}));	
 
 		if (!dynamicLoad) {
-			document.fire(ModuleManager.LOAD_READY_EVENT);
+			this._initBindings();
 		} else {
 			HelperLoaderManager.getInstance().loadHelpers(this._currentModuleProperties);	
 		}
@@ -288,8 +280,8 @@ var ModuleManager = Class.create({
 	/**
 	 *
 	 * */
-	_helpersReadyHandler: function(event) {
-		document.fire(ModuleManager.LOAD_READY_EVENT);
+	_helpersReadyHandler: function() {
+		this._initBindings();
 	},
 	
 	/**
@@ -516,13 +508,7 @@ var ModuleManager = Class.create({
 					data[propertie]['optional'].push(optional);
 				}
 			}
-			/*for (key in data) {
-				var value = data[key];
-				if (value['ids']) {
-					bindingUtil_bind_function(value['ids'], value['attributes'], key, modelHelperInstances[i], value['hasGetter'], value['hasSetter'], value['initPropertie'], value['optional']);
-				}	
-			}*/
-			
+
 			for (var k = 0, propertieListLen = propertieList.length; k < propertieListLen; k++) {
 				var key = propertieList[k];
 				var value = data[key];
@@ -680,7 +666,7 @@ var ModuleManager = Class.create({
 	 * */
 	_ready: function() {
 		
-		document.fire(ModuleManager.BIND_READY_EVENT, this._currentModuleProperties);	
+		this.dispatchEvent(WZEvent.READY, this._currentModuleProperties);
 		
 		if (this._stackAdd.length > 0) {
 			this._run();
@@ -697,9 +683,6 @@ var ModuleManager = Class.create({
  * */
 Object.extend(ModuleManager, {	
 
-	BIND_READY_EVENT: "bind:ready",
-	LOAD_READY_EVENT: "bind:loadReady",
-	
 	MODULE_SIMPLE: "simple",
 	MODULE_MULTIPLE: "multiple",
 	

@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var Model = Class.create({
+var Model = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -62,7 +62,7 @@ var Model = Class.create({
 
 		FwkTrace.writeMessage("M7_001", name, value); //"Model::setContextualData : new data with key = ["+name+"], value = ["+value+"]");
 		this._contextualDatas.name = value;
-		document.fire(Model.CONTEXTUAL_DATA_CHANGE_EVENT, {name: name, value:value, toList: toList});
+		this.dispatchEvent(Event.CHANGE, {name: name, value:value, toList: toList});
 	},
 	
 	/**
@@ -86,7 +86,7 @@ var Model = Class.create({
 	 * @param arguments[0] (array) : Array of data
 	 * */
 	launchControllerMethod: function() {
-		document.fire(Model.LAUNCH_CONTROLLER_METHOD_EVENT, {name: arguments[0], multitonId: arguments[1], args: arguments[2]});
+		this.dispatchEvent(WZEvent.LAUNCH_CONTROLLER_METHOD_EVENT, {name: arguments[0], multitonId: arguments[1], args: arguments[2]})
 	},
 	
 	/*************************************************/
@@ -97,17 +97,8 @@ var Model = Class.create({
 	 *
 	 * */
 	_ready: function() {
-		document.fire(Model.MODEL_READY_EVENT);
+		this.dispatchEvent(WZEvent.READY);
 	}
-});
-
-/**
- *
- * */
-Object.extend(Model, {
-	MODEL_READY_EVENT : 'model:ready',
-	CONTEXTUAL_DATA_CHANGE_EVENT : 'model:contextualDataChange',
-	LAUNCH_CONTROLLER_METHOD_EVENT : 'model:launchControllerMethod'
 });
 
 /**

@@ -14,23 +14,17 @@
 
 	<script type="text/javascript">
 		var initializer = new Initializer(); 
-		initializer.init('<?php echo $urlUnitTest; ?>onthefly/conf.xml', 
+		initializer.init('<?php echo $urlUnitTest; ?>contextualdata/conf.xml', 
 		{
-			mvcFile: '<?php echo $urlUnitTest; ?>onthefly/mvc.xml',
+			mvcFile: '<?php echo $urlUnitTest; ?>contextualdata/mvc.xml',
 			baseUrl: '<?php echo $urlJs; ?>'
-		}, {
-			LANG: ''
 		});
 		
 		
 	</script>
 </head>
 <body>
-	<button id="buttonLoad">Click here to load the module</button><br />
-	<button id="buttonUnLoad">Click here to unload the module that will reload</button>
-	<button id="buttonUnLoad2">Click here to unload the module that will normally not reload</button>
-	
-	<div id="module2Container"></div>
-	
+	<button id="buttonExchange1">Click here to exchange data</button><br />
+
 </body>
 </html>

@@ -8,6 +8,11 @@ $i=0;
 $toFile = "compress/WZFwk.js";
 $jsFileList = array();
 
+$jsFileList[$i++]['name'] = "event/EventDispatcher.js";
+$jsFileList[$i++]['name'] = "event/Event.js";
+$jsFileList[$i++]['name'] = "event/IOErrorEvent.js";
+$jsFileList[$i++]['name'] = "event/WZEvent.js";
+
 // utils first
 $jsFileList[$i++]['name'] = "trace/Trace.js";
 $jsFileList[$i++]['name'] = "utils/ErrorUtil.js";

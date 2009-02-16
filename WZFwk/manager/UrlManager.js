@@ -27,7 +27,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 /**
  *
  * */
-var UrlManager = Class.create({
+var UrlManager = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -149,7 +149,7 @@ var UrlManager = Class.create({
 		}
 		FwkTrace.writeMessage('MC_005', newLocation, from);//'UrlManager::_urlChangeHandler :: Location:'+newLocation+', From:'+from);
 		
-		document.fire(UrlManager.URL_CHANGE, {location: newLocation, data: historyData, from: from});
+		this.dispatchEvent(Event.CHANGE, {location: newLocation, data: historyData, from: from});
 	}
 });
 
@@ -157,7 +157,6 @@ var UrlManager = Class.create({
  * Static property
  * */
 Object.extend(UrlManager, {
-	URL_CHANGE : 		'urlManager:change',
 	FROM_USER : 		'fromUser',
 	FROM_FRAMEWORK : 	'fromFramework',
 	FROM_INIT : 		'fromInit'

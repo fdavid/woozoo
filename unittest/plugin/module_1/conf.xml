@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf 	model="Module1Model" 	
+		controller="Module1Controller" 	
+		dynamicLoad="true"	
+		folder="unittest/plugin/module_1/" 
+		version="0.1.8"
+		
+		compressed="false"		
+>
+	<bindAsListener id="loadPluginScriptaculous" 	event="click"  	handler="loadPluginScriptaculousClickHandler"/>
+	<bindAsListener id="loadPluginEffect" 			event="click"  	handler="loadPluginEffectClickHandler"/>
+	<bindAsListener id="loadPluginScriptaculousEffect" 			event="click"  	handler="loadPluginScriptaculousEffectClickHandler"/>
+
+	<plugin id="RGBColor" />
+</conf>	

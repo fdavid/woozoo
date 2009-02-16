@@ -24,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var Initializer = Class.create({
+var Initializer = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -80,12 +80,14 @@ var Initializer = Class.create({
 		
 		// observe
 		document.observe('dom:loaded', 						this._listeners.get('dom'));
-		document.observe(ConfManager.CONF_READY_EVENT, 		this._listeners.get('conf'));
-		document.observe(LangManager.LANG_READY_EVENT, 		this._listeners.get('lang'));
-		document.observe(Controller.CONTROLLER_READY_EVENT, this._listeners.get('controller'));
-		document.observe(Model.MODEL_READY_EVENT, 			this._listeners.get('model'));
+		
+		ConfManager.getInstance().addEventListener(WZEvent.READY, this._listeners.get('conf'));
+		LangManager.getInstance().addEventListener(WZEvent.READY, this._listeners.get('lang'));
+		Controller.getInstance().addEventListener(WZEvent.READY, this._listeners.get('controller'));
+		Model.getInstance().addEventListener(WZEvent.READY, this._listeners.get('model'));
+		
 		//== IF (NO_FWK_TRACE) ==//
-		document.observe(FwkTrace.FWK_TRACE_READY_EVENT, 	this._listeners.get('fwkTrace'));
+		FwkTrace.getInstance().addEventListener(WZEvent.READY, this._listeners.get('fwkTrace'));
 		//== ENDIF (NO_FWK_TRACE) ==//
 	},
 	
@@ -95,12 +97,14 @@ var Initializer = Class.create({
 	_unregisterListeners: function() {
 		// unregister
 		document.stopObserving('dom:loaded', 						this._listeners.get('dom'));
-		document.stopObserving(ConfManager.CONF_READY_EVENT, 		this._listeners.get('conf'));
-		document.stopObserving(LangManager.LANG_READY_EVENT, 		this._listeners.get('lang'));
-		document.stopObserving(Controller.CONTROLLER_READY_EVENT, 	this._listeners.get('controller'));
-		document.stopObserving(Model.MODEL_READY_EVENT, 			this._listeners.get('model'));
+		
+		ConfManager.getInstance().removeEventListener(WZEvent.READY, this._listeners.get('conf'));
+		LangManager.getInstance().removeEventListener(WZEvent.READY, this._listeners.get('lang'));
+		Controller.getInstance().removeEventListener(WZEvent.READY, this._listeners.get('controller'));
+		Model.getInstance().removeEventListener(WZEvent.READY, this._listeners.get('model'));
+		
 		//== IF (NO_FWK_TRACE) ==//
-		document.stopObserving(FwkTrace.FWK_TRACE_READY_EVENT, 		this._listeners.get('fwkTrace'));
+		FwkTrace.getInstance().removeEventListener(WZEvent.READY, this._listeners.get('fwkTrace'));
 		//== ENDIF (NO_FWK_TRACE) ==//
 		
 		// free memory
@@ -115,6 +119,7 @@ var Initializer = Class.create({
 		Trace.time('WZFramework_DOMReady');
 		this._isDomReady = true;
 		document.fire('intializer:domReady');
+		
 	},
 	
 	/**
@@ -129,6 +134,7 @@ var Initializer = Class.create({
 	 * */
 	_confReadyHandler: function() {
 		var confManager = ConfManager.getInstance();
+
 		//== IF (NO_FWK_TRACE) ==//
 		if (confManager.get('debugFwk')) {
 			FwkTrace.init();	

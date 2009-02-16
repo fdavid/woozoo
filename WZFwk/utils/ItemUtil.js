@@ -27,6 +27,9 @@ var ItemUtil = Class.create({});
 
 Object.extend(ItemUtil, {
 	getAttribute: function(item, propertie) {
+		if (item == undefined) return undefined;
+		if (propertie == undefined) return propertie;
+		
 		var t;
 		if (t = item[propertie]) {
 			return t;

@@ -1,14 +1,20 @@
 <?php
 $urlFwk = "http://localhost/js/WZFwk_multiton/";
+$urlPlugin = "http://localhost/js/WZPlugin/";
 $urlUnitTest = "http://localhost/js/unittest/";
 $urlJs = "http://localhost/js/";
+
 $compressed = true;
 
 if ($compressed == true) {
 	$fwkScript = '<script type="text/javascript" src="'.$urlFwk.'compress/compress.js"></script>';
 } else {
 	$fwkScript = '<script type="text/javascript" src="'.$urlFwk.'trace/Trace.js"></script>
-
+		<script type="text/javascript" src="'.$urlFwk.'event/EventDispatcher.js"></script>
+		<script type="text/javascript" src="'.$urlFwk.'event/Event.js"></script>
+		<script type="text/javascript" src="'.$urlFwk.'event/WZEvent.js"></script>
+		<script type="text/javascript" src="'.$urlFwk.'event/IOErrorEvent.js"></script>
+		
 		<script type="text/javascript" src="'.$urlFwk.'utils/ErrorUtil.js"></script>
 		<script type="text/javascript" src="'.$urlFwk.'utils/BooleanUtil.js"></script>
 		<script type="text/javascript" src="'.$urlFwk.'utils/ParsingUtil.js"></script>

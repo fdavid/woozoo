@@ -2,10 +2,8 @@
 <conf 	model="Module2Model" 	
 		controller="Module2Controller" 	
 		dynamicLoad="true"	
-		folder="unittest/onthefly/module_2/" 
+		folder="unittest/contextualdata/module_2/" 
 		version="0.1.8"
-		view="module_2/view[ApplicationData.LANG]"
-		addViewInId="module2Container"
 		compressed="false"		
 >
 

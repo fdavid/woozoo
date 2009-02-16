@@ -28,14 +28,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 //== IF (NO_FWK_TRACE) ==//
 
-var FwkTrace = Class.create({
-	initialize: function() {}					 						 
+var FwkTrace = Class.create(EventDispatcher, {
+	ready:function() {
+		this.dispatchEvent(WZEvent.READY);
+	}
 });
+
+SingletonUtil.execute(FwkTrace);
 
 Object.extend(FwkTrace, {
 	
-	FWK_TRACE_READY_EVENT: 'fwkTraceEvent:ready',
-		
 	_data:$H({}),
 	
 	usable:false,
@@ -61,7 +63,7 @@ Object.extend(FwkTrace, {
 	 * */
 	_loadSuccessHandler: function(transport) {
 		this._data = ParsingUtil.parseTxt(transport.responseText);
-		document.fire(FwkTrace.FWK_TRACE_READY_EVENT);
+		FwkTrace.getInstance().ready();
 	},
 	
 	/**

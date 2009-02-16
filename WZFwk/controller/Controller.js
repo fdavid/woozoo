@@ -23,7 +23,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
-var Controller = Class.create({
+var Controller = Class.create(EventDispatcher, {
 
 	/*************************************************/
 	/**					CONSTRUCTOR					**/
@@ -81,9 +81,10 @@ var Controller = Class.create({
 	 *
 	 * */
 	init:function() {
+		ModuleManager.getInstance().addEventListener(WZEvent.READY, this._bindManagerReadyHandler.bind(this));
+		Model.getInstance().addEventListener(WZEvent.LAUNCH_CONTROLLER_METHOD_EVENT, this._launchControllerMethod.bind(this))
 		
-		document.observe(ModuleManager.BIND_READY_EVENT, this._bindManagerReadyHandler.bindAsEventListener(this));
-		document.observe(Model.LAUNCH_CONTROLLER_METHOD_EVENT, this._launchControllerMethod.bindAsEventListener(this));
+		//document.observe(Model.LAUNCH_CONTROLLER_METHOD_EVENT, this._launchControllerMethod.bindAsEventListener(this));
 		
 		if (!ConfManager.getInstance().get('useDynCompression')) {
 			this._loadMvcFile();
@@ -459,8 +460,7 @@ var Controller = Class.create({
 	/**
 	 *
 	 * */
-	_launchControllerMethod: function(event) {
-		var memo = event.memo;
+	_launchControllerMethod: function(memo) {
 		var args = $A(memo.args);
 		var multitonId = memo.multitonId;
 		var modelName = memo.name;
@@ -636,23 +636,25 @@ var Controller = Class.create({
 		url.push("&useCache="+conf.get('useCache'));
 		
 		var scriptLoader = new ScriptLoader(url.join(""));
+		scriptLoader.addEventListener(Event.COMPLETE, this._loadDynFileSucceedHandler.bind(this));
+		scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, this._loadDynFileFailedHandler.bind(this));
 		
-		document.observe(ScriptLoader.SUCCEED, 	this._loadDynFileSucceedHandler.bindAsEventListener(this));
-		document.observe(ScriptLoader.FAILED, 	this._loadDynFileFailedHandler.bindAsEventListener(this));
+		//document.observe(ScriptLoader.SUCCEED, 	this._loadDynFileSucceedHandler.bindAsEventListener(this));
+		//document.observe(ScriptLoader.FAILED, 	this._loadDynFileFailedHandler.bindAsEventListener(this));
 		
 		scriptLoader.load();
 	},
 	
 	_loadDynFileSucceedHandler: function() {
-		document.stopObserving(ScriptLoader.SUCCEED);
-		document.stopObserving(ScriptLoader.FAILED);
+		//document.stopObserving(ScriptLoader.SUCCEED);
+		//document.stopObserving(ScriptLoader.FAILED);
 		FwkTrace.writeMessage('M5_043');//Controller::_loadDynFileSucceedHandler : loading dyn succeed
 		this._parseMvcFile();
 		this._useMvcFile();
 	}, 
 	
 	_loadDynFileFailedHandler: function() {
-		trace('Initializer::_loadDynFileFailedHandler : fail loading dyn');
+		FwkTrace.writeMessage('M5_049');//('Controller::_loadDynFileFailedHandler : fail loading dyn');
 		this._loadDynFileSucceedHandler();
 	},
 	
@@ -744,8 +746,9 @@ var Controller = Class.create({
 	/**
 	 *
 	 * */
-	_bindManagerReadyHandler: function(event) {
-		this._initHelpers(event.memo);
+	_bindManagerReadyHandler: function(memo) {
+		
+		this._initHelpers(memo);
 	
 		this._fileReady++;
 		
@@ -830,14 +833,10 @@ var Controller = Class.create({
 	_ready: function() {
 		if (this._isInit) {
 			this._isInit = false;
-			document.fire(Controller.CONTROLLER_READY_EVENT);	
+			this.dispatchEvent(WZEvent.READY);
 		}
 	}
 	
-});
-
-Object.extend(Controller, {
-	CONTROLLER_READY_EVENT : 'controller:ready'
 });
 
 SingletonUtil.execute(Controller);
